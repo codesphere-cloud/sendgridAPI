@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build:tailwind": "npx tailwindcss -i src/styles.css -o public/index.css",
+    "start:server": "node index.js",
+    "start": "npm-run-all -s build:tailwind start:server",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -11,11 +14,17 @@
   "license": "ISC",
   "dependencies": {
     "@sendgrid/mail": "^7.7.0",
+    "@tailwindcss/forms": "^0.5.3",
+    "autoprefixer": "^10.4.14",
     "axios": "^1.4.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "ndjson": "^2.0.0",
+    "postcss": "^8.4.24",
     "tailwindcss": "^3.3.2",
     "zlib": "^1.0.5"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
   }
 }
