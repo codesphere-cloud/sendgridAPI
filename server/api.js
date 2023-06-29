@@ -7,12 +7,12 @@ const path = require("path");
 const sgMail = require('@sendgrid/mail');
 
 const sendGridEndpoint = `${config.SENDGRID_CONTACTS_ENDPOINT}`
-const listId = `${config.LIST_ID}`
+// const listId = `${config.LIST_ID}`
 
 
 //Get Link for Get Request
 
-const fetchContacts = async () => {
+const fetchContacts = async (listId) => {
     try{
         console.log("Fetching contacts Url GET link")
         const response = await axios.post(sendGridEndpoint, {
@@ -69,9 +69,9 @@ const pollForContactsUrl = async (url, interval, maxAttempts) => {
 
 // Retrieve contacts link
 
-const getContactsLink = async () => {
+const getContactsLink = async (listId) => {
     try{
-        const initialReq = await fetchContacts();
+        const initialReq = await fetchContacts(listId);
         const contactsEndpoint = initialReq._metadata.self;
 
         const contactsExport = await pollForContactsUrl(contactsEndpoint,1000,5);
@@ -124,7 +124,7 @@ const downloadAndDecompress = (contactsUrl) => {
 sgMail.setApiKey(process.env.SENDGRID_API_KEY); // Set your SendGrid API key
 
 // This function takes an array of email addresses and sends an email to each of them
-const sendEmails = async (emailAddresses) => {
+const sendEmails = async (emailAddresses, emailText) => {
     let personalizationsArray = emailAddresses.map(email => {
         return { to: [{ email: email }] };
     });
@@ -132,8 +132,8 @@ const sendEmails = async (emailAddresses) => {
     const msg = {
         from: 'support@codesphere.com',
         subject: 'Hello from Codesphere',
-        text: 'Hello, this is a test email.',
-        html: '<strong>Hello, this is a test email.</strong>',
+        text: emailText,
+        html: `<p>${emailText}</p>`,
         personalizations: personalizationsArray,
     };
 
