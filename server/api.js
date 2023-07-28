@@ -1,5 +1,4 @@
 require("dotenv").config();
-const config = require('./config');
 const sgMail = require('@sendgrid/mail');
 
 // const listId = `${config.LIST_ID}`

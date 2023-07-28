@@ -1,14 +1,30 @@
 const express = require('express');
-const { sendEmails } = require('./server/api');
-const { processContacts } = require('./server/utils');
 const app = express();
 const port = 3000;
-const sqlite3 = require('sqlite3').verbose();
+
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
+
+const { sendEmails } = require('./server/api');
+const { processContacts } = require('./server/utils');
 const { uploadToDb } = require('./server/uploadToDb');
+const { auth } = require('express-openid-connect');
+
+require('dotenv').config();
+
+const config = {
+  authRequired: true,
+  auth0Logout: true,
+  secret: process.env.SECRET,
+  baseURL: 'http://localhost:3000',
+  clientID: 'AZY64CKKQV1BPbDfyxb02eJeZAjyFNWK',
+  issuerBaseURL: 'https://dev-clacle02vxe1wjq2.eu.auth0.com'
+};
+
+app.use(auth(config));
 
 app.use(express.json());
+app.use(express.static('public'));
 
 app.all("*", (req, res, next) => {
   console.log(`Received a ${req.method} request on ${req.originalUrl}`);
@@ -42,8 +58,6 @@ app.post('/upload', upload.single('contacts-upload'), (req, res) => {
   res.send('File uploaded successfully');
 
 });
-
-app.use(express.static('public'));
 
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
