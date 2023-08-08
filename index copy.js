@@ -6,7 +6,7 @@ const multer = require('multer');
 const upload = multer({ dest: 'uploads/' });
 
 const { sendEmails } = require('./server/api');
-const { processContacts } = require('./server/utils');
+const { processAllContacts } = require('./server/utils');
 const { uploadToDb } = require('./server/uploadToDb');
 const { addContact, deleteContact } = require('./server/dataToDb');
 const { auth } = require('express-openid-connect');
@@ -66,7 +66,7 @@ app.post("/contacts", async (req, res) => {
   const { templateId } = req.body;
 
   try {
-    const emailGroups = await processContacts(99);
+    const emailGroups = await processAllContacts(99);
 
     // Send emails to each group
     for (let group of emailGroups) {

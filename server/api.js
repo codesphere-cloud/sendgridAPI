@@ -30,7 +30,24 @@ const sendEmails = async (emailAddresses, templateId) => {
     }
 };
 
+const sendSingleEmail = async (emailAdress, templateId) => {
 
+    const msg = {
+        from: 'support@codesphere.com',
+        subject: 'Hello from Codesphere',
+        template_id: templateId,
+        // html: `<p>${emailText}</p>`,
+        to: [{ email: emailAdress }],
+    };
 
-module.exports = { sendEmails }
+    try {
+        await sgMail.send(msg);
+        console.log('Email sent successfully');
+    } catch (error) {
+        console.error('Error sending emails:', error);
+        throw error;
+    }
+}
+
+module.exports = { sendEmails, sendSingleEmail }
 
